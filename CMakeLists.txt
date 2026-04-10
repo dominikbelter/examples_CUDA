@@ -47,7 +47,7 @@ if(BUILD_WITH_CUDA)
     # CUDA flags
 #    set(CMAKE_CUDA_ARCHITECTURES 86)
 #    set(CMAKE_CUDA_COMPILER "/usr/local/cuda/bin/nvcc")
-    project(WALKERS LANGUAGES CXX CUDA)
+    project(CUDA_EXAMPLES LANGUAGES CXX CUDA)
     enable_language(CUDA)
 
     find_package(CUDAToolkit REQUIRED)
@@ -143,5 +143,14 @@ if(BUILD_DEMOS)
         )
         ADD_EXECUTABLE(demo_CUDA_initialization ${CUDA_INITIALIZATION_SOURCES})
         TARGET_LINK_LIBRARIES(demo_CUDA_initialization)
+
+        file(GLOB CUDA_MODERN_CPP_SOURCES
+            "${CMAKE_SOURCE_DIR}/demos/modern_cpp_intro.cu"
+        )
+        ADD_EXECUTABLE(demo_CUDA_modern_cpp ${CUDA_MODERN_CPP_SOURCES})
+        target_compile_options(demo_CUDA_modern_cpp PRIVATE
+            $<$<COMPILE_LANGUAGE:CUDA>:--extended-lambda>
+        )
+        TARGET_LINK_LIBRARIES(demo_CUDA_modern_cpp)
 
 endif(BUILD_DEMOS)
