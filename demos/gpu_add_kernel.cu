@@ -14,8 +14,11 @@ void vector_add(float *out, float *a, float *b, int n) {
 // Kernel function to add the elements of two arrays
 __global__ void add(int n, float *x, float *y, float *out)
 {
-    for (int i = 0; i < n; i++)
+    int index = blockIdx.x * blockDim.x + threadIdx.x;
+    int stride = blockDim.x * gridDim.x;
+    for (int i = index; i < n; i += stride){
         out[i] = x[i] + y[i];
+    }
 }
 
 int main(){
@@ -74,7 +77,7 @@ int main(){
     std::cout << "To fully utilize the capabilities of the GPU, it is necessary to divide \n";
     std::cout << "the task into blocks and threads within those blocks: \n";
     std::cout << "<<<number_of_blocks, number_of_threads>>> (or <<<number_of_blocks, block_size>>>).\n";
-    int blockSize = 256;
+    int blockSize = 700;
     int numBlocks = (N + blockSize - 1) / blockSize;
     std::cout << "numBlocks " << numBlocks << "\n";
     std::cout << "blockSize " << blockSize << "\n";

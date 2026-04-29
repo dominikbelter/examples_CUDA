@@ -57,6 +57,8 @@ if(BUILD_WITH_CUDA)
     endif ()
 endif(BUILD_WITH_CUDA)
 
+FIND_PACKAGE(OpenCV REQUIRED)
+include_directories( ${OpenCV_INCLUDE_DIRS} )
 
 # Executable output directory
 SET(RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build/bin${OUTPUT_DIRECTORY_POSTFIX} CACHE PATH "Executable output directory")
@@ -131,6 +133,9 @@ if(BUILD_DEMOS)
         )
         ADD_EXECUTABLE(demo_CUDA_add ${CUDA_ADD_SOURCES})
         TARGET_LINK_LIBRARIES(demo_CUDA_add)
+
+        ADD_EXECUTABLE(demo_cv demos/cv_demo.cpp demos/cuda_conv.cu)
+        TARGET_LINK_LIBRARIES(demo_cv ${OpenCV_LIBS})
 
         file(GLOB CUDA_ADD_KERNEL_SOURCES
             "${CMAKE_SOURCE_DIR}/demos/gpu_add_kernel.cu"
