@@ -55,6 +55,12 @@ if(BUILD_WITH_CUDA)
     if (CUDAToolkit_VERSION VERSION_LESS "12.0")
         message(FATAL_ERROR "This project requires CUDA 12.0 or higher")
     endif ()
+
+    find_path(CUDNN_INCLUDE_DIR cudnn.h
+        HINTS ${CUDAToolkit_INCLUDE_DIRS})
+
+    find_library(CUDNN_LIBRARY cudnn
+        HINTS ${CUDAToolkit_LIBRARY_DIR})
 endif(BUILD_WITH_CUDA)
 
 FIND_PACKAGE(OpenCV REQUIRED)
@@ -148,6 +154,30 @@ if(BUILD_DEMOS)
         )
         ADD_EXECUTABLE(demo_CUDA_initialization ${CUDA_INITIALIZATION_SOURCES})
         TARGET_LINK_LIBRARIES(demo_CUDA_initialization)
+
+        file(GLOB CURAND_SOURCES
+            "${CMAKE_SOURCE_DIR}/demos/cu_rand.cu"
+        )
+        ADD_EXECUTABLE(demo_curand ${CURAND_SOURCES})
+        TARGET_LINK_LIBRARIES(demo_curand curand)
+
+        file(GLOB CUSOLVER_SOURCES
+            "${CMAKE_SOURCE_DIR}/demos/cu_solver.cu"
+        )
+        ADD_EXECUTABLE(demo_cusolver ${CUSOLVER_SOURCES})
+        TARGET_LINK_LIBRARIES(demo_cusolver cublas cusolver curand)
+
+        file(GLOB CUFFT_SOURCES
+            "${CMAKE_SOURCE_DIR}/demos/cu_fft.cu"
+        )
+        ADD_EXECUTABLE(demo_cufft ${CUFFT_SOURCES})
+        TARGET_LINK_LIBRARIES(demo_cufft cufft curand)
+
+        file(GLOB CUDNN_SOURCES
+            "${CMAKE_SOURCE_DIR}/demos/cu_dnn.cu"
+        )
+        ADD_EXECUTABLE(demo_cudnn ${CUDNN_SOURCES})
+        TARGET_LINK_LIBRARIES(demo_cudnn cudnn)
 
         file(GLOB CUDA_MODERN_CPP_SOURCES
             "${CMAKE_SOURCE_DIR}/demos/modern_cpp_intro.cu"
