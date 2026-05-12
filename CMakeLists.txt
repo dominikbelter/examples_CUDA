@@ -197,6 +197,11 @@ if(BUILD_DEMOS)
             ${CMAKE_SOURCE_DIR}/demos/cu_pso_modern.cu
         )
 
+
+        file(GLOB CPU_PSO_SOURCES
+            "${CMAKE_SOURCE_DIR}/demos/cu_pso_cpu.cpp"
+        )
+
         # --------------------------------------------------
         # PSO DEMO
         # --------------------------------------------------
@@ -205,6 +210,7 @@ if(BUILD_DEMOS)
             demo_PSO_compare
             ${CMAKE_SOURCE_DIR}/demos/pso_demo.cpp
             ${CUDA_PSO_SOURCES}
+            ${CPU_PSO_SOURCES}
         )
 
         target_compile_options(

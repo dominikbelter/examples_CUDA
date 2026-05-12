@@ -9,6 +9,8 @@ void run_pso_modern(
     int particles_count,
     int iterations);
 
+void run_pso_cpu(int particles_count, int iterations);
+
 int main()
 {
     const int particles = 100000;
@@ -56,6 +58,21 @@ int main()
             << "Modern thrust version time: "
             << duration.count()
             << " ms\n";
+    }
+    {
+        auto start = std::chrono::high_resolution_clock::now();
+
+        run_pso_cpu(particles, iterations);
+
+        auto stop = std::chrono::high_resolution_clock::now();
+
+        auto duration =
+            std::chrono::duration_cast<std::chrono::milliseconds>(
+                stop - start);
+
+        std::cout << "CPU PSO time: "
+                  << duration.count()
+                  << " ms\n\n";
     }
 
     return 0;
