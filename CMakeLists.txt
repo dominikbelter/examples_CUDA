@@ -165,7 +165,7 @@ if(BUILD_DEMOS)
             "${CMAKE_SOURCE_DIR}/demos/cu_solver.cu"
         )
         ADD_EXECUTABLE(demo_cusolver ${CUSOLVER_SOURCES})
-        TARGET_LINK_LIBRARIES(demo_cusolver cublas cusolver curand)
+        TARGET_LINK_LIBRARIES(demo_cusolver cublas cusolver)
 
         file(GLOB CUFFT_SOURCES
             "${CMAKE_SOURCE_DIR}/demos/cu_fft.cu"
@@ -187,5 +187,33 @@ if(BUILD_DEMOS)
             $<$<COMPILE_LANGUAGE:CUDA>:--extended-lambda>
         )
         TARGET_LINK_LIBRARIES(demo_CUDA_modern_cpp)
+
+        # --------------------------------------------------
+        # CUDA PSO SOURCES
+        # --------------------------------------------------
+
+        set(CUDA_PSO_SOURCES
+            ${CMAKE_SOURCE_DIR}/demos/cu_pso_kernel.cu
+            ${CMAKE_SOURCE_DIR}/demos/cu_pso_modern.cu
+        )
+
+        # --------------------------------------------------
+        # PSO DEMO
+        # --------------------------------------------------
+
+        add_executable(
+            demo_PSO_compare
+            ${CMAKE_SOURCE_DIR}/demos/pso_demo.cpp
+            ${CUDA_PSO_SOURCES}
+        )
+
+        target_compile_options(
+            demo_PSO_compare PRIVATE
+            $<$<COMPILE_LANGUAGE:CUDA>:--extended-lambda>
+        )
+
+        target_link_libraries(
+            demo_PSO_compare
+        )
 
 endif(BUILD_DEMOS)
