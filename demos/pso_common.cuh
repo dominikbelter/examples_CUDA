@@ -6,5 +6,5 @@
 __host__ __device__ inline
 float objective(float x)
 {
-    return (x-3) * (x-3) + 9.0f;
+    return (x-5) * (x-5) + 1.0f;
 }

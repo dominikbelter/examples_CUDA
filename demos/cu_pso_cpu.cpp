@@ -15,7 +15,7 @@ struct Particle
 
 float objective(float x)
 {
-    return ((x-3) * (x-3) + 9.0f);
+    return ((x-5) * (x-5) + 1.0f);
 }
 
 void run_pso_cpu(int particles_count, int iterations)

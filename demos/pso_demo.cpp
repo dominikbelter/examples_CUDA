@@ -1,79 +1,58 @@
 #include <iostream>
 #include <chrono>
 
-void run_pso_kernel(
-    int particles_count,
-    int iterations);
-
-void run_pso_modern(
-    int particles_count,
-    int iterations);
-
+void run_pso_kernel(int particles_count, int iterations);
+void run_pso_modern(int particles_count, int iterations);
 void run_pso_cpu(int particles_count, int iterations);
+
+template<typename Func>
+void benchmark(
+    const std::string& name,
+    Func func,
+    int particles,
+    int iterations)
+{
+    const auto start =
+        std::chrono::high_resolution_clock::now();
+
+    func(particles, iterations);
+
+    const auto stop =
+        std::chrono::high_resolution_clock::now();
+
+    const auto duration =
+        std::chrono::duration_cast<std::chrono::milliseconds>(
+            stop - start);
+
+    std::cout
+        << name
+        << ": "
+        << duration.count()
+        << " ms\n";
+}
 
 int main()
 {
-    const int particles = 100000;
-    const int iterations = 200;
+    constexpr int particles  = 100000;
+    constexpr int iterations = 200;
 
-    {
-        auto start =
-            std::chrono::high_resolution_clock::now();
+    benchmark(
+        "Kernel version time",
+        run_pso_kernel,
+        particles,
+        iterations);
 
-        run_pso_kernel(
-            particles,
-            iterations);
+    benchmark(
+        "Modern thrust version time",
+        run_pso_modern,
+        particles,
+        iterations);
 
-        auto stop =
-            std::chrono::high_resolution_clock::now();
-
-        auto duration =
-            std::chrono::duration_cast<
-                std::chrono::milliseconds>(
-                stop - start);
-
-        std::cout
-            << "Kernel version time: "
-            << duration.count()
-            << " ms\n\n";
-    }
-
-    {
-        auto start =
-            std::chrono::high_resolution_clock::now();
-
-        run_pso_modern(
-            particles,
-            iterations);
-
-        auto stop =
-            std::chrono::high_resolution_clock::now();
-
-        auto duration =
-            std::chrono::duration_cast<
-                std::chrono::milliseconds>(
-                stop - start);
-
-        std::cout
-            << "Modern thrust version time: "
-            << duration.count()
-            << " ms\n";
-    }
-    {
-        auto start = std::chrono::high_resolution_clock::now();
-
-        run_pso_cpu(particles, iterations);
-
-        auto stop = std::chrono::high_resolution_clock::now();
-
-        auto duration =
-            std::chrono::duration_cast<std::chrono::milliseconds>(
-                stop - start);
-
-        std::cout << "CPU PSO time: "
-                  << duration.count()
-                  << " ms\n\n";
-    }
+    benchmark(
+        "CPU PSO time",
+        run_pso_cpu,
+        particles,
+        iterations);
 
     return 0;
 }
